@@ -1,0 +1,34 @@
+name: Check Upstream Updates
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for upstream changes
+        run: |
+          git remote add upstream https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python.git || true
+          git fetch upstream
+
+          LOCAL_SYNC=$(cat .last-upstream-sync)
+          UPSTREAM_HEAD=$(git rev-parse upstream/master)
+
+          if [ "$LOCAL_SYNC" = "$UPSTREAM_HEAD" ]; then
+            echo "Upstream is up to date (commit $UPSTREAM_HEAD)"
+          else
+            echo "Upstream has new commits since $LOCAL_SYNC"
+            echo "Upstream head: $UPSTREAM_HEAD"
+            echo ""
+            echo "Changed files:"
+            git diff --name-only "$LOCAL_SYNC"..upstream/master -- '*.ipynb' '*.md' || true
+            echo ""
+            echo "::notice::Upstream has new changes. Please review and update Chinese translations in zh/ if needed."
+          fi
