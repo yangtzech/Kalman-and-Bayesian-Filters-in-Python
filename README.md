@@ -1,3 +1,11 @@
+## 中文翻译
+
+本书已有完整的简体中文翻译版本，位于 [`zh/`](./zh/) 目录。
+
+[点击阅读中文版目录](./zh/README.md)
+
+---
+
 # [Kalman and Bayesian Filters in Python](https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python)
 
 
